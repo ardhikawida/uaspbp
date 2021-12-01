@@ -1,5 +1,6 @@
 package com.ssd.ssd.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,12 @@ import com.ssd.ssd.R;
 import com.ssd.ssd.model.FoodModels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
 
-    private ArrayList<FoodModels> dataList;
+    private List<FoodModels> dataList;
     private Dialog dialog;
 
 
@@ -30,7 +32,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     }
 
 
-    public FoodAdapter(ArrayList<FoodModels> dataList) {
+    public FoodAdapter(List<FoodModels> dataList) {
         this.dataList = dataList;
     }
 
@@ -45,7 +47,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void onBindViewHolder(FoodViewHolder holder, int position) {
         holder.txtNama.setText(dataList.get(position).getNama());
         holder.txtHarga.setText("Rp. " + dataList.get(position).getHarga().toString());
-        Picasso.get().load(dataList.get(position).getGambar()).into(holder.imgMakanan);
+        Log.d("sandy", "onBindViewHolder: "+ dataList.get(position).getFoto());
+        Picasso.get().load("http://192.168.1.7/"+dataList.get(position).getFoto()).centerCrop().fit().into(holder.imgMakanan);
     }
 
     @Override

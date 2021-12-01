@@ -2,6 +2,7 @@ package com.ssd.ssd.network;
 
 import com.ssd.ssd.model.Response;
 import com.ssd.ssd.model.ResponseBody;
+import com.ssd.ssd.model.ResponseBodyBarang;
 import com.ssd.ssd.model.ResponseBodyReq;
 import com.ssd.ssd.model.UsersModel;
 
@@ -15,6 +16,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiInterface {
+
+    //========Autentifikasi========
     @GET("read")
     Call<ResponseBody> getAllPhotos();
 
@@ -47,6 +50,9 @@ public interface ApiInterface {
             @Field("kota") String kota,
             @Field("password") String password
     );
+    //========END Autentifikasi========
 
-
+    //========Barang========
+    @GET("barang")
+    Call<ResponseBodyBarang> getallbarang();
 }

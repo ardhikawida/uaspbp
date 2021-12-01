@@ -23,20 +23,19 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:id="@+id/img_makanan"
             />
 
         <TextView
-            android:layout_width="wrap_content"
             android:id="@+id/txt_nama"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/img_makanan"
-            android:text="@string/nasi_goreng"
-            android:fontFamily="@font/mulish_black"
             android:layout_marginTop="5dp"
-            android:textAppearance="@style/nasi_goreng"
-            />
+            android:fontFamily="@font/mulish_black"
+            android:text="@string/nasi_goreng"
+            android:textAppearance="@style/nasi_goreng" />
 
         <TextView
             android:layout_width="wrap_content"

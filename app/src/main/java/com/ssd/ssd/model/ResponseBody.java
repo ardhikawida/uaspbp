@@ -9,4 +9,14 @@ public class ResponseBody {
      String message;
     @SerializedName("data")
      List<UsersModel> usersmodel;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<UsersModel> getUsersmodel() {
+        return usersmodel;
+    }
 }
+
+

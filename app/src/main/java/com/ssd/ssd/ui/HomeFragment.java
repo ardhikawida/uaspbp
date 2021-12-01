@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ssd.ssd.DetailFoodActivity;
+import com.ssd.ssd.InsertFoodActivity;
 import com.ssd.ssd.R;
+import com.ssd.ssd.SplashScreenActivity;
 import com.ssd.ssd.adapter.FoodAdapter;
+import com.ssd.ssd.auth.LoginActivity;
 import com.ssd.ssd.databinding.FragmentHomeBinding;
 import com.ssd.ssd.model.FoodModels;
 
@@ -44,8 +47,8 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(requireContext().getApplicationContext(), DetailFoodActivity.class);
                 intent.putExtra("nama", String.valueOf(foodModelsArrayList.get(position).getNama()));
                 intent.putExtra("harga", foodModelsArrayList.get(position).getHarga());
-                intent.putExtra("foto", String.valueOf(foodModelsArrayList.get(position).getGambar()));
-                intent.putExtra("deskripsi", String.valueOf(foodModelsArrayList.get(position).getDeskripsi()));
+//                intent.putExtra("foto", String.valueOf(foodModelsArrayList.get(position).getGambar()));
+//                intent.putExtra("deskripsi", String.valueOf(foodModelsArrayList.get(position).getDeskripsi()));
                 startActivity(intent);
             }
         });
@@ -56,14 +59,22 @@ public class HomeFragment extends Fragment {
 
         binding.rvFood.setAdapter(adapter);
 
+        binding.btnaddmakanan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(requireContext().getApplicationContext(), InsertFoodActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return binding.getRoot();
     }
 
     void addData(){
-        foodModelsArrayList = new ArrayList<>();
-        foodModelsArrayList.add(new FoodModels("Nasi Goreng Seafood", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.nasigoreng).toString(),"Pedas Manis" ,20000));
-        foodModelsArrayList.add(new FoodModels("Rendang", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.rendang).toString(), "Pedas Gurih",30000));
-        foodModelsArrayList.add(new FoodModels("Sate Kambing", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.satekambing).toString(), "Pedas Sedap",32000));
+//        foodModelsArrayList = new ArrayList<>();
+//        foodModelsArrayList.add(new FoodModels("Nasi Goreng Seafood", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.nasigoreng).toString(),"Pedas Manis" ,20000));
+//        foodModelsArrayList.add(new FoodModels("Rendang", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.rendang).toString(), "Pedas Gurih",30000));
+//        foodModelsArrayList.add(new FoodModels("Sate Kambing", Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.satekambing).toString(), "Pedas Sedap",32000));
     }
 }

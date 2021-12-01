@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ssd.ssd.MainActivity;
 import com.ssd.ssd.R;
+import com.ssd.ssd.admin.AdminActivity;
 import com.ssd.ssd.database.AppDatabase;
 import com.ssd.ssd.database.dao.UsersDao;
 import com.ssd.ssd.database.entity.UserEntity;
@@ -51,28 +52,36 @@ public class LoginActivity extends AppCompatActivity {
                 String edtpassword = binding.edtpassword.getText().toString();
 
                 if (!edtmail.isEmpty() && !edtpassword.isEmpty()){
-                    firebaseAuth.signInWithEmailAndPassword(edtmail,edtpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progressDialog.dismiss();
-                            if (task.isSuccessful()){
-                                if (firebaseAuth.getCurrentUser().isEmailVerified()){
-                                    Preferences.setIsLogin(getBaseContext(),"sukses");
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                    if (edtmail.equals("admin") && edtpassword.equals("admin")){
+                        Preferences.setIsLogin(getBaseContext(),"admin");
+                        Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else {
+                        firebaseAuth.signInWithEmailAndPassword(edtmail,edtpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                progressDialog.dismiss();
+                                if (task.isSuccessful()){
+                                    if (firebaseAuth.getCurrentUser().isEmailVerified()){
+                                        Preferences.setIsLogin(getBaseContext(),"sukses");
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }else {
+                                        Preferences.setIsLogin(getBaseContext(),"verifikasi");
+                                        Intent intent = new Intent(LoginActivity.this, VerifikasiActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 }else {
-                                    Preferences.setIsLogin(getBaseContext(),"verifikasi");
-                                    Intent intent = new Intent(LoginActivity.this, VerifikasiActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                    Snackbar.make(v, "cek email dan password" , Snackbar.LENGTH_LONG).show();
                                 }
-                            }else {
-                                Snackbar.make(v, "cek email dan password" , Snackbar.LENGTH_LONG).show();
-                            }
 
-                        }
-                    });
+                            }
+                        });
+
+                    }
 
                 }else {
                     progressDialog.dismiss();
@@ -99,6 +108,10 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }else if (Preferences.getIsLogin(getBaseContext()).equals("verifikasi")){
             Intent intent = new Intent(LoginActivity.this, VerifikasiActivity.class);
+            startActivity(intent);
+            finish();
+        }else if (Preferences.getIsLogin(getBaseContext()).equals("admin")){
+            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
             startActivity(intent);
             finish();
         }

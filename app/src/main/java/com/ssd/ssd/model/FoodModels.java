@@ -1,14 +1,23 @@
 package com.ssd.ssd.model;
 
-public class FoodModels {
+import com.google.gson.annotations.SerializedName;
 
-    private String nama, gambar,deskripsi;
+import java.sql.Timestamp;
+
+public class FoodModels {
+    @SerializedName("nama")
+    private String nama;
+    @SerializedName("keterangan")
+    private String keterangan;
+    @SerializedName("foto")
+    private String foto;
+    @SerializedName("harga")
     private Integer harga;
 
-    public FoodModels(String nama, String gambar, String deskripsi, Integer harga) {
+    public FoodModels(String nama, String keterangan, String foto, Integer harga) {
         this.nama = nama;
-        this.gambar = gambar;
-        this.deskripsi = deskripsi;
+        this.keterangan = keterangan;
+        this.foto = foto;
         this.harga = harga;
     }
 
@@ -16,31 +25,15 @@ public class FoodModels {
         return nama;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public String getKeterangan() {
+        return keterangan;
     }
 
-    public String getGambar() {
-        return gambar;
-    }
-
-    public void setGambar(String gambar) {
-        this.gambar = gambar;
-    }
-
-    public String getDeskripsi() {
-        return deskripsi;
-    }
-
-    public void setDeskripsi(String deskripsi) {
-        this.deskripsi = deskripsi;
+    public String getFoto() {
+        return foto;
     }
 
     public Integer getHarga() {
         return harga;
-    }
-
-    public void setHarga(Integer harga) {
-        this.harga = harga;
     }
 }

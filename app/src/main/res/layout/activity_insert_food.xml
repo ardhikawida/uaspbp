@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="insertford"
+            type="com.ssd.ssd.InsertFoodActivity" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".InsertFoodActivity">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btnUpload">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/baris1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/judul"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Nama Makanan"
+                        android:textColor="#000"
+                        android:textSize="24dp"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/nama_makanan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Nama Makanan"
+                        android:textSize="14dp"
+
+                        />
+
+                    <EditText
+                        android:id="@+id/edt_nama"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/kotakisi"
+                        android:inputType="textPersonName"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_harga"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Harga Makanan"
+                        android:textSize="14dp"
+
+                        />
+
+                    <EditText
+                        android:id="@+id/edt_harga"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/kotakisi"
+                        android:inputType="numberDecimal"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_keterangan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Keterangan"
+                        android:textSize="14dp"
+
+                        />
+
+                    <EditText
+                        android:id="@+id/edt_keterangan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/kotakisi"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="16sp" />
+
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/baris1"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="30dp"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/gambar_makanan"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:background="@drawable/kotakfoto" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/btn_foto"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/ic_baseline_camera_alt_24" />
+
+                        <ImageView
+                            android:id="@+id/btn_galery"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/ic_baseline_perm_media_24" />
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+        </ScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUpload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:backgroundTint="#F3B11A"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="TAMBAHKAN"
+            android:textColor="@color/colordongker"
+            />
+
+    </RelativeLayout>
+</layout>

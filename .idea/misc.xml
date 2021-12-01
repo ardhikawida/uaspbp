@@ -3,11 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/kotakfoto.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/kotakisi.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/layout/activity_admin.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/activity_detail_food.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/activity_insert_food.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.12537993920972645" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.17119565217391305" />
         <entry key="app/src/main/res/layout/activity_verifikasi.xml" value="0.3847679071036248" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/list_transaksi.xml" value="0.2578125" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1296875" />
       </map>
     </option>
@@ -17,5 +24,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.2578125" />
+      </ProjectState>
+    </option>
   </component>
 </project>
