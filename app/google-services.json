@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "7554950432",
+    "project_id": "ssd-restaurant",
+    "storage_bucket": "ssd-restaurant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7554950432:android:754f3b474732b34f7ae345",
+        "android_client_info": {
+          "package_name": "com.ssd.ssd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7554950432-7gob1a6s60kv3ee6nobq9bna3ocgirpe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssd.ssd",
+            "certificate_hash": "d8cc31c19324c6480cb0f9762e60cc9c6719f504"
+          }
+        },
+        {
+          "client_id": "7554950432-dsg2o66vkn2isggofl5m4pupl4uc479n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8K4CHFc0IZDCEfRfRCSPQDOhbqHZh0ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7554950432-dsg2o66vkn2isggofl5m4pupl4uc479n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

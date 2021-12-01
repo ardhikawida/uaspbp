@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="login"
+            type="com.ssd.ssd.auth.VerifikasiActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".auth.VerifikasiActivity"
+        android:background="@drawable/bglogin">
+
+        <LinearLayout
+            android:id="@+id/rectangle_1"
+            android:layout_width="match_parent"
+            android:layout_height="345dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="50dp"
+            android:gravity="center"
+            android:layout_marginEnd="50dp"
+            android:orientation="vertical"
+            android:background="@drawable/kotak_login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:layout_gravity="center"
+                android:id="@+id/txtstatus"
+                android:layout_marginTop="20dp"
+                android:textAppearance="@style/username" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_verifikasi"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:backgroundTint="@color/kuning"
+                android:text="@string/verifikasi"
+                android:textSize="14dp"
+                android:textColor="@color/black"
+
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:backgroundTint="@color/kuning"
+                android:text="@string/logout"
+                android:textSize="14dp"
+                android:textColor="@color/black"
+
+                />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

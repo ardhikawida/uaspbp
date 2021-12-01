@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="payableorder">Payable Orders</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic2FuZHJpbmFtYXJpYSIsImEiOiJja3VwYXFoYjIxYTgyMm9veDh5b3F4NnN5In0.trFjywGrKeFd10rxPLDApg</string>
+    <string name="verifikasi">Verifikasi</string>
+
+</resources>

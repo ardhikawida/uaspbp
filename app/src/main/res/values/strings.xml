@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">SSD</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="cart">Cart</string>
+    <string name="orders">Orders</string>
+    <string name="profile">Profile</string>
+    <string name="nasi_goreng">Nasi Goreng Seafood</string>
+    <string name="harga">Rp. 0</string>
+    <string name="firstname">Firstname</string>
+    <string name="namabelakang">Nama Belakang</string>
+    <string name="nohp">No Hp</string>
+    <string name="email">Email</string>
+    <string name="alamat">Alamat</string>
+    <string name="kota">Kota</string>
+    <string name="update">Update</string>
+    <string name="keluar">Keluar</string>
+    <string name="item_limit">item limit</string>
+    <string name="kolom_kosong">kolom kosong</string>
+    <string name="total">Total</string>
+    <string name="checkout">Checkout</string>
+    <string name="pendingorders">Pending Orders</string>
+    <string name="payableorder">Payable Orders</string>
+    <string name="maps">Peta</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic2FuZHJpbmFtYXJpYSIsImEiOiJja3VwYXFoYjIxYTgyMm9veDh5b3F4NnN5In0.trFjywGrKeFd10rxPLDApg</string>
+    <string name="status">Status</string>
+    <string name="logout">Logout</string>
+    <string name="verifikasi">Verifikasi</string>
+
+</resources>
