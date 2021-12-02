@@ -12,11 +12,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SSD"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
+        <activity
+            android:name=".admin.DetailFoodAdminActivity"
+            android:exported="false" />
         <activity
             android:name=".admin.AdminActivity"
             android:exported="false" />
@@ -38,7 +42,8 @@
         <activity android:name=".DetailFoodActivity" />
         <activity android:name=".auth.RegisterActivity" />
         <activity android:name=".auth.LoginActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".SplashScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,7 +52,8 @@
         </activity>
         <activity android:name=".MainActivity" />
 
-        <service android:name=".service.FirebaseNotifikasi">
+        <service android:name=".service.FirebaseNotifikasi"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

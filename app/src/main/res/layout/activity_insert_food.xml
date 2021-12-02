@@ -166,11 +166,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:backgroundTint="#F3B11A"
             android:fontFamily="@font/poppins_semibold"
             android:text="TAMBAHKAN"
             android:textColor="@color/colordongker"
-            />
+            app:backgroundTint="#F3B11A" />
 
     </RelativeLayout>
 </layout>

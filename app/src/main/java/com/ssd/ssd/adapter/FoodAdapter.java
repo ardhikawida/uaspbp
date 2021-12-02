@@ -24,7 +24,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
 
     public interface Dialog {
-        void onClick(int position);
+        void onClick(int position, String nama,Integer harga, String foto, String keterangan, Integer id);
     }
 
     public void setDialog(Dialog dialog) {
@@ -49,6 +49,16 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.txtHarga.setText("Rp. " + dataList.get(position).getHarga().toString());
         Log.d("sandy", "onBindViewHolder: "+ dataList.get(position).getFoto());
         Picasso.get().load("http://192.168.1.7/"+dataList.get(position).getFoto()).centerCrop().fit().into(holder.imgMakanan);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.onClick(holder.getLayoutPosition(),dataList.get(position).getNama(),dataList.get(position).getHarga(),dataList.get(position).getFoto(),dataList.get(position).getKeterangan(),dataList.get(position).getId());
+                }
+            }
+        });
+
     }
 
     @Override
@@ -66,14 +76,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             txtHarga = (TextView) itemView.findViewById(R.id.txt_harga);
             imgMakanan = (ImageView) itemView.findViewById(R.id.img_makanan);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dialog != null) {
-                        dialog.onClick(getLayoutPosition());
-                    }
-                }
-            });
+
 
         }
     }

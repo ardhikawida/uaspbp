@@ -41,17 +41,17 @@ public class HomeFragment extends Fragment {
 
         adapter = new FoodAdapter(foodModelsArrayList);
 
-        adapter.setDialog(new FoodAdapter.Dialog() {
-            @Override
-            public void onClick(int position) {
-                Intent intent = new Intent(requireContext().getApplicationContext(), DetailFoodActivity.class);
-                intent.putExtra("nama", String.valueOf(foodModelsArrayList.get(position).getNama()));
-                intent.putExtra("harga", foodModelsArrayList.get(position).getHarga());
-//                intent.putExtra("foto", String.valueOf(foodModelsArrayList.get(position).getGambar()));
-//                intent.putExtra("deskripsi", String.valueOf(foodModelsArrayList.get(position).getDeskripsi()));
-                startActivity(intent);
-            }
-        });
+//        adapter.setDialog(new FoodAdapter.Dialog() {
+//            @Override
+//            public void onClick(int position) {
+//                Intent intent = new Intent(requireContext().getApplicationContext(), DetailFoodActivity.class);
+//                intent.putExtra("nama", String.valueOf(foodModelsArrayList.get(position).getNama()));
+//                intent.putExtra("harga", foodModelsArrayList.get(position).getHarga());
+////                intent.putExtra("foto", String.valueOf(foodModelsArrayList.get(position).getGambar()));
+////                intent.putExtra("deskripsi", String.valueOf(foodModelsArrayList.get(position).getDeskripsi()));
+//                startActivity(intent);
+//            }
+//        });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
 

@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/kotakisi.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/layout/activity_admin.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_detail_food.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/activity_detail_food_admin.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_insert_food.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.12537993920972645" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />

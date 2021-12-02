@@ -9,4 +9,17 @@ public class Response {
     String message;
     @SerializedName("data")
     Integer data;
+
+    public Response(String message, Integer data) {
+        this.message = message;
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Integer getData() {
+        return data;
+    }
 }

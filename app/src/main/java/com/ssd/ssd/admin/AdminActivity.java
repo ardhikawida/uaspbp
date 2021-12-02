@@ -5,14 +5,20 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.ssd.ssd.InsertFoodActivity;
 import com.ssd.ssd.R;
 import com.ssd.ssd.adapter.FoodAdapter;
+import com.ssd.ssd.auth.LoginActivity;
+import com.ssd.ssd.auth.RegisterActivity;
+import com.ssd.ssd.auth.VerifikasiActivity;
 import com.ssd.ssd.databinding.ActivityAdminBinding;
 import com.ssd.ssd.model.FoodModels;
 import com.ssd.ssd.model.ResponseBody;
@@ -21,6 +27,7 @@ import com.ssd.ssd.model.ResponseBodyReq;
 import com.ssd.ssd.model.UsersModel;
 import com.ssd.ssd.network.ApiInterface;
 import com.ssd.ssd.network.ServiceGenerator;
+import com.ssd.ssd.session.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +52,24 @@ public class AdminActivity extends AppCompatActivity {
 
         getdata(view);
 
+        binding.btnaddmakanan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AdminActivity.this, InsertFoodActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        binding.btnlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Preferences.setIsLogin(getBaseContext(),"");
+                Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
 
@@ -62,7 +87,7 @@ public class AdminActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBodyBarang> call, Throwable t) {
-                Snackbar.make(view, "gagal get api" , Snackbar.LENGTH_LONG).show();
+                Toast.makeText(AdminActivity.this,"gagal api",Toast.LENGTH_SHORT).show();
                 Log.d("sandy", "onFailure: " + t.getMessage());
             }
         });
@@ -76,6 +101,22 @@ public class AdminActivity extends AppCompatActivity {
         binding.rvFood.setLayoutManager(layoutManager);
 
         binding.rvFood.setAdapter(adapter);
+
+        adapter.setDialog(new FoodAdapter.Dialog() {
+            @Override
+            public void onClick(int position, String nama, Integer harga, String foto, String keterangan, Integer id) {
+                Intent intent = new Intent(AdminActivity.this, DetailFoodAdminActivity.class);
+                intent.putExtra("nama", nama);
+                intent.putExtra("harga", harga);
+                intent.putExtra("foto", foto);
+                intent.putExtra("keterangan", keterangan);
+                intent.putExtra("id", id);
+                startActivity(intent);
+            }
+
+        });
+
+
 
     }
 }
