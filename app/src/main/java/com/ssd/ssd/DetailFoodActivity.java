@@ -23,8 +23,8 @@ public class DetailFoodActivity extends AppCompatActivity {
 
     ActivityDetailFoodBinding binding;
     private Integer jumlah_counter = 0;
-    private String nama,foto,deskripsi;
-    private Integer harga,id_users;
+    private String nama,foto,keterangan;
+    private Integer harga;
 
     int hargatotal = 0;
 
@@ -44,13 +44,12 @@ public class DetailFoodActivity extends AppCompatActivity {
         Intent intent = getIntent();
         nama = intent.getStringExtra("nama");
         foto = intent.getStringExtra("foto");
-        deskripsi = intent.getStringExtra("deskripsi");
+        keterangan = intent.getStringExtra("keterangan");
         harga = intent.getIntExtra("harga",0);
-        id_users = Preferences.getIsIdUser(this);
 
         binding.txtnama.setText(nama);
         binding.txtharga.setText("Harga : Rp. "+harga.toString());
-        binding.txtdeskripsi.setText("Deskripsi : "+deskripsi);
+        binding.txtdeskripsi.setText("Deskripsi : "+keterangan);
 
         Picasso.get().load(foto).fit().into(binding.imageView);
 
