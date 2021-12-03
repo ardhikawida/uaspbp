@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssd.ssd.R;
 import com.ssd.ssd.database.entity.TransaksiEntity;
+import com.ssd.ssd.model.BarangModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewAdapter> {
-    private List<TransaksiEntity> list;
+    private List<BarangModel> list;
     private Context context;
     private Dialog dialog;
     private Dialog btnhapus;
-    private ArrayList<TransaksiEntity> TransaksiList;
+    private ArrayList<BarangModel> TransaksiList;
 
     public interface Dialog{
         void onHapus(int position);
@@ -34,7 +35,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewAdapter>
         this.dialog = dialog;
     }
 
-    public OrderAdapter(Context context, List<TransaksiEntity> list) {
+    public OrderAdapter(Context context, List<BarangModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -48,14 +49,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewAdapter>
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewAdapter holder, int position) {
-        Integer jumlah = list.get(position).jumlah;
-        Integer hargatotal = list.get(position).harga_total;
-        Integer harga = list.get(position).harga;
-        String nama = list.get(position).nama;
+        Integer jumlah = list.get(position).getJumlah();
+        Integer hargatotal = list.get(position).getHarga_total();
+        Integer harga = list.get(position).getHarga();
+        String nama = list.get(position).getNama();
 
-        holder.nama.setText(list.get(position).nama);
+        holder.nama.setText(list.get(position).getNama());
         holder.jumlah.setText(jumlah.toString());
-        holder.harga.setText("Harga : " + list.get(position).harga + "x" + list.get(position).jumlah );
+        holder.harga.setText("Harga : " + list.get(position).getHarga() + "x" + list.get(position).getJumlah() );
         holder.total.setText(String.format(context.getString(R.string.total)) + " : Rp. " + hargatotal);
 
         holder.btndelete.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +71,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewAdapter>
 
     }
 
-    public void filterList(ArrayList<TransaksiEntity> filteredList) {
+    public void filterList(ArrayList<BarangModel> filteredList) {
         TransaksiList = filteredList;
         notifyDataSetChanged();
     }

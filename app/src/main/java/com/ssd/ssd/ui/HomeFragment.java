@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.ssd.ssd.DetailFoodActivity;
 import com.ssd.ssd.InsertFoodActivity;
 import com.ssd.ssd.R;
@@ -42,12 +43,13 @@ public class HomeFragment extends Fragment {
     private FoodAdapter adapter;
     private ArrayList<FoodModels> foodModelsArrayList;
     private View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false);
-
+        binding.shimmer.startShimmer();
 
         getdata(view);
 
@@ -61,7 +63,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBodyBarang> call, Response<ResponseBodyBarang> response) {
                 if (response.isSuccessful()) {
-
+                    binding.rvFood.setVisibility(View.VISIBLE);
+                    binding.shimmer.setVisibility(View.GONE);
+                    binding.shimmer.stopShimmer();
                     List<FoodModels> foodModels = response.body().getFoodModels();
                     generateDataList(foodModels);
                 }
@@ -77,12 +81,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void generateDataList(List<FoodModels> photoList){
-        adapter = new FoodAdapter(photoList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext().getApplicationContext());
+        try {
+            adapter = new FoodAdapter(photoList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext().getApplicationContext());
 
-        binding.rvFood.setLayoutManager(layoutManager);
+            binding.rvFood.setLayoutManager(layoutManager);
 
-        binding.rvFood.setAdapter(adapter);
+            binding.rvFood.setAdapter(adapter);
+
+        }catch (Exception e){
+            return;
+        }
 
         adapter.setDialog(new FoodAdapter.Dialog() {
             @Override
@@ -92,7 +101,7 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("harga", harga);
                 intent.putExtra("foto", foto);
                 intent.putExtra("keterangan", keterangan);
-                intent.putExtra("id", id);
+                intent.putExtra("id_barang", id);
                 startActivity(intent);
             }
 

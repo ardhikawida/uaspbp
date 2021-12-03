@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ssd.ssd.R;
 import com.ssd.ssd.database.entity.TransaksiEntity;
+import com.ssd.ssd.model.BarangModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,16 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewAdapter> {
-    private List<TransaksiEntity> list;
+    private List<BarangModel> list;
     private Context context;
     private Dialog dialog;
     private Dialog btnhapus;
     private ArrayList<TransaksiEntity> TransaksiList;
 
     public interface Dialog{
-        void onHapus(int position);
-        void onMines(int position, Integer jumlah, Integer harga, String nama);
-        void onPlus(int position, Integer jumlah, Integer harga, String nama);
+        void onHapus(int position, Integer id);
+        void onMines(int position, Integer jumlah, Integer harga, Integer id_barang);
+        void onPlus(int position, Integer jumlah, Integer harga, Integer id_barang);
     }
 
 
@@ -38,7 +39,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewAdapter> {
         this.dialog = dialog;
     }
 
-    public CartAdapter(Context context, List<TransaksiEntity> list) {
+    public CartAdapter(Context context, List<BarangModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -52,21 +53,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewAdapter> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewAdapter holder, int position) {
-        Integer jumlah = list.get(position).jumlah;
-        Integer hargatotal = list.get(position).harga_total;
-        Integer harga = list.get(position).harga;
-        String nama = list.get(position).nama;
+        Integer jumlah = list.get(position).getJumlah();
+        Integer hargatotal = list.get(position).getHarga_total();
+        Integer harga = list.get(position).getHarga();
+        String nama = list.get(position).getNama();
 
-        holder.nama.setText(list.get(position).nama);
+        holder.nama.setText(list.get(position).getNama());
         holder.jumlah.setText(jumlah.toString());
-        holder.harga.setText("Harga : " + list.get(position).harga + "x" + list.get(position).jumlah );
+        holder.harga.setText("Harga : " + list.get(position).getHarga() + "x" + list.get(position).getJumlah() );
         holder.total.setText(String.format(context.getString(R.string.total)) + " : Rp. " + hargatotal);
 
         holder.btndelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dialog!=null){
-                    dialog.onHapus(holder.getLayoutPosition());
+                    dialog.onHapus(holder.getLayoutPosition(), list.get(position).getId());
                 }
             }
         });
@@ -75,7 +76,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewAdapter> {
             @Override
             public void onClick(View v) {
                 if (dialog!=null){
-                    dialog.onMines(holder.getLayoutPosition(),jumlah,harga,nama);
+                    dialog.onMines(holder.getLayoutPosition(),jumlah,harga,list.get(position).getId_barang());
                 }
             }
         });
@@ -84,7 +85,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewAdapter> {
             @Override
             public void onClick(View v) {
                 if (dialog!=null){
-                    dialog.onPlus(holder.getLayoutPosition(),jumlah,harga,nama);
+                    dialog.onPlus(holder.getLayoutPosition(),jumlah,harga,list.get(position).getId_barang());
 
                 }
             }

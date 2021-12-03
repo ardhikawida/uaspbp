@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/kotakfoto.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/kotakisi.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/drawable/kotakshimmer.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/activity_admin.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_detail_food.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_detail_food_admin.xml" value="0.25" />
@@ -13,8 +14,11 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.17119565217391305" />
         <entry key="app/src/main/res/layout/activity_verifikasi.xml" value="0.3847679071036248" />
+        <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.12537993920972645" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/fragment_orders.xml" value="0.1331521739130435" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2578125" />
+        <entry key="app/src/main/res/layout/item_shimmer.xml" value="0.12817028985507245" />
         <entry key="app/src/main/res/layout/list_transaksi.xml" value="0.2578125" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.1296875" />
       </map>

@@ -3,12 +3,14 @@ package com.ssd.ssd.ui;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
@@ -17,12 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.ssd.ssd.DetailFoodActivity;
 import com.ssd.ssd.MainActivity;
 import com.ssd.ssd.R;
 import com.ssd.ssd.adapter.CartAdapter;
+import com.ssd.ssd.adapter.FoodAdapter;
 import com.ssd.ssd.database.AppDatabase;
 import com.ssd.ssd.database.entity.TransaksiEntity;
 import com.ssd.ssd.databinding.FragmentCartBinding;
+import com.ssd.ssd.model.BarangModel;
+import com.ssd.ssd.model.FoodModels;
+import com.ssd.ssd.model.ResponseSum;
+import com.ssd.ssd.model.ResponseTransaksi;
+import com.ssd.ssd.network.ApiInterface;
+import com.ssd.ssd.network.ServiceGenerator;
 import com.ssd.ssd.session.Preferences;
 
 import java.util.ArrayList;
@@ -30,17 +41,24 @@ import java.util.List;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CartFragment extends Fragment {
 
     FragmentCartBinding binding;
     private AppDatabase database;
 
-    private CartAdapter cartAdapter;
-    private List<TransaksiEntity> list = new ArrayList<>();
-    String CHANNEL_ID="10001";
-
+    private CartAdapter adapter;
+    private ArrayList<BarangModel> list;
+    String CHANNEL_ID = "10001";
+    String userId;
+    FirebaseAuth auth;
+    ProgressDialog progressDialog;
     private Integer harga_total = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,65 +66,75 @@ public class CartFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cart, container, false);
         binding.getLifecycleOwner();
-
+        progressDialog = new ProgressDialog(getActivity());
+        auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
         database = AppDatabase.getInstance(requireContext().getApplicationContext());
-        list.clear();
-        list.addAll(database.transaksiDao().getcart(Preferences.getIsEmail(requireContext()),"proses"));
-
-        cartAdapter = new CartAdapter(requireContext().getApplicationContext(), list);
-        cartAdapter.setDialog(new CartAdapter.Dialog() {
-
+        binding.shimmer.startShimmer();
+        //GET API
+        ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
+        Call<ResponseTransaksi> call = apiInterface.gettransaksi(userId);
+        call.enqueue(new Callback<ResponseTransaksi>() {
             @Override
-            public void onHapus(int position) {
-                //untuk menghapus data
-                TransaksiEntity transaksi = list.get(position);
-                database.transaksiDao().delete(transaksi);
-                onStart();
-
-            }
-
-            @Override
-            public void onMines(int position, Integer jumlah, Integer harga, String nama) {
-                if (jumlah > 0) {
-                    jumlah -= 1;
-                    harga_total = (jumlah * harga);
-                    database.transaksiDao().update(Preferences.getIsEmail(requireContext()),jumlah,harga_total,nama,"proses");
-                    onStart();
-
-                }
-                TransaksiEntity transaksi = list.get(position);
-                database.transaksiDao().update(Preferences.getIsEmail(requireContext()),jumlah,harga_total,nama,"proses");
-                    onStart();
-            }
-
-            @Override
-            public void onPlus(int position, Integer jumlah, Integer harga, String nama) {
-                if (jumlah >= 0) {
-                    jumlah += 1;
-                    harga_total = (jumlah * harga);
-                    database.transaksiDao().update(Preferences.getIsEmail(requireContext()),jumlah,harga_total,nama,"proses");
-                    onStart();
-
+            public void onResponse(Call<ResponseTransaksi> call, Response<ResponseTransaksi> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        binding.rvcart.setVisibility(View.VISIBLE);
+                        binding.shimmer.setVisibility(View.GONE);
+                        binding.shimmer.stopShimmer();
+                        List<BarangModel> foodModels = response.body().getData();
+                        generateDataList(foodModels);
+                    } else {
+                        Toast.makeText(requireContext().getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                    return;
                 }
 
             }
 
-
+            @Override
+            public void onFailure(Call<ResponseTransaksi> call, Throwable t) {
+                Log.d("sandy", "onResponse: " + t.getMessage());
+            }
         });
+        //END GET API
 
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext().getApplicationContext(), RecyclerView.VERTICAL, false);
         binding.rvcart.setLayoutManager(layoutManager);
-        binding.rvcart.setAdapter(cartAdapter);
+        binding.rvcart.setAdapter(adapter);
 
         binding.btnCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database.transaksiDao().deleteorder(Preferences.getIsEmail(requireContext()),"selesai");
-                database.transaksiDao().checkout("selesai",Preferences.getIsEmail(requireContext()));
-                notifikasi("checkout berhasil", "SSD Restaurant");
-                Snackbar.make(v, "Checkout berhasil", Snackbar.LENGTH_LONG).show();
-                onStart();
+                progressDialog.setTitle("Checkout ...");
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+                ApiInterface checkout = ServiceGenerator.createService(ApiInterface.class);
+                checkout.checkout(userId).enqueue(new Callback<ResponseSum>() {
+                    @Override
+                    public void onResponse(Call<ResponseSum> call, Response<ResponseSum> response) {
+                        if (response.isSuccessful()) {
+
+                            if (response.body().getData() == 1) {
+                                progressDialog.dismiss();
+                                notifikasi("checkout berhasil", "SSD Restaurant");
+                                Snackbar.make(v, "Checkout berhasil", Snackbar.LENGTH_LONG).show();
+                                onStart();
+                            } else {
+                                progressDialog.dismiss();
+                                Snackbar.make(v, "checkout Gagal", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseSum> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Log.d("sandy", "onFailure: " + t.getMessage());
+                    }
+                });
             }
         });
 
@@ -123,20 +151,162 @@ public class CartFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        list.clear();
-        list.addAll(database.transaksiDao().getcart(Preferences.getIsEmail(requireContext()),"proses"));
-        Log.d("tester",Preferences.getIsIdUser(requireContext()).toString());
-        cartAdapter.notifyDataSetChanged();
-        Integer sum = database.transaksiDao().getsum(Preferences.getIsEmail(requireContext()),"proses");
-        if (sum == null){
-            binding.txthargacart.setText("Jumlah : Rp. 0" );
-        }else {
-            binding.txthargacart.setText("Jumlah : Rp. " + sum);
-        }
+        //GET API
+
+            ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
+            Call<ResponseTransaksi> call = apiInterface.gettransaksi(userId);
+            call.enqueue(new Callback<ResponseTransaksi>() {
+                @Override
+                public void onResponse(Call<ResponseTransaksi> call, Response<ResponseTransaksi> response) {
+                  try {
+                      List<BarangModel> foodModels = response.body().getData();
+                      generateDataList(foodModels);
+                      if (response.isSuccessful()) {
+                      } else {
+                          Toast.makeText(requireContext().getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+                      }
+                  }catch (Exception e){
+                      return;
+                  }
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseTransaksi> call, Throwable t) {
+                    Log.d("sandy", "onResponse: " + t.getMessage());
+                }
+            });
+            //END GET API
+
+
+        ApiInterface getsum = ServiceGenerator.createService(ApiInterface.class);
+        getsum.getsum(userId).enqueue(new Callback<ResponseSum>() {
+            @Override
+            public void onResponse(Call<ResponseSum> call, Response<ResponseSum> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        binding.txthargacart.setText("Jumlah : Rp. " + response.body().getData());
+                    }catch (Exception e){
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseSum> call, Throwable t) {
+
+            }
+        });
+
     }
 
-    public void notifikasi(String pesan, String pengirim)
-    {
+    private void generateDataList(List<BarangModel> photoList) {
+        try {
+            adapter = new CartAdapter(requireContext().getApplicationContext(), photoList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext().getApplicationContext());
+
+            binding.rvcart.setLayoutManager(layoutManager);
+
+            binding.rvcart.setAdapter(adapter);
+
+            adapter.setDialog(new CartAdapter.Dialog() {
+
+                @Override
+                public void onHapus(int position, Integer id) {
+                    //untuk menghapus data
+                    progressDialog.setTitle("Sedang menghapus ..");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+
+                    ApiInterface hapustransaksi = ServiceGenerator.createService(ApiInterface.class);
+                    hapustransaksi.hapustransaksi(id).enqueue(new Callback<ResponseSum>() {
+                        @Override
+                        public void onResponse(Call<ResponseSum> call, Response<ResponseSum> response) {
+                            if (response.isSuccessful()) {
+                                progressDialog.dismiss();
+                                onStart();
+                            } else {
+                                progressDialog.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseSum> call, Throwable t) {
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+
+                @Override
+                public void onMines(int position, Integer jumlah, Integer harga, Integer id_barang) {
+                    progressDialog.setTitle("Update data ..");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+                    if (jumlah > 0) {
+                        jumlah -= 1;
+                        harga_total = (jumlah * harga);
+                        ApiInterface update = ServiceGenerator.createService(ApiInterface.class);
+                        update.updatetransaksi(userId, id_barang, harga_total, jumlah).enqueue(new Callback<ResponseSum>() {
+                            @Override
+                            public void onResponse(Call<ResponseSum> call, Response<ResponseSum> response) {
+                                if (response.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    if (response.body().getData() == 1) {
+                                        onStart();
+                                    }
+                                } else {
+                                    progressDialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseSum> call, Throwable t) {
+                                progressDialog.dismiss();
+                            }
+                        });
+
+                    }
+
+                }
+
+                @Override
+                public void onPlus(int position, Integer jumlah, Integer harga, Integer id_barang) {
+                    progressDialog.setTitle("Update data ..");
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.show();
+                    if (jumlah >= 0) {
+                        jumlah += 1;
+                        harga_total = (jumlah * harga);
+                        ApiInterface update = ServiceGenerator.createService(ApiInterface.class);
+                        update.updatetransaksi(userId, id_barang, harga_total, jumlah).enqueue(new Callback<ResponseSum>() {
+                            @Override
+                            public void onResponse(Call<ResponseSum> call, Response<ResponseSum> response) {
+                                if (response.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    if (response.body().getData() == 1) {
+                                        onStart();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseSum> call, Throwable t) {
+                                progressDialog.dismiss();
+                            }
+                        });
+
+                    }
+                }
+
+            });
+
+        }catch (Exception e){
+            return;
+        }
+
+    }
+
+    public void notifikasi(String pesan, String pengirim) {
         String notification_title = pengirim;
         String notification_message = pesan;
 
@@ -160,8 +330,7 @@ public class CartFragment extends Fragment {
         int mNotificationId = (int) System.currentTimeMillis();
         NotificationManager mNotifyMgr =
                 (NotificationManager) requireActivity().getSystemService(NOTIFICATION_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-        {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
 

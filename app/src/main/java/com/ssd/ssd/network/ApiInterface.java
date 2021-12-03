@@ -4,9 +4,8 @@ import com.ssd.ssd.model.Response;
 import com.ssd.ssd.model.ResponseBody;
 import com.ssd.ssd.model.ResponseBodyBarang;
 import com.ssd.ssd.model.ResponseBodyReq;
-import com.ssd.ssd.model.UsersModel;
-
-import java.util.List;
+import com.ssd.ssd.model.ResponseSum;
+import com.ssd.ssd.model.ResponseTransaksi;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -96,4 +95,54 @@ public interface ApiInterface {
     );
 
     //========END Barang========
+
+    //API TRANSAKSI
+    @GET("transaksi")
+    Call<ResponseTransaksi> gettransaksi(
+            @Query("uid") String uid);
+
+    @POST("transaksi")
+    @FormUrlEncoded
+    Call<Response> tambahtransaksi(
+            @Field("uid") String uid,
+            @Field("id_barang") Integer id_barang,
+            @Field("nama") String nama,
+            @Field("harga") Integer harga,
+            @Field("harga_total") Integer harga_total,
+            @Field("jumlah") Integer jumlah
+    );
+
+    @GET("sum")
+    Call<ResponseSum> getsum(
+            @Query("uid") String uid
+    );
+
+    @POST("hapustransaksi/{id}")
+    Call<ResponseSum> hapustransaksi(
+            @Path("id") Integer id
+    );
+
+    @POST("updatetransaksi")
+    @FormUrlEncoded
+    Call<ResponseSum> updatetransaksi(
+            @Field("uid") String uid,
+            @Field("id_barang") Integer id_barang,
+            @Field("harga_total") Integer harga_total,
+            @Field("jumlah") Integer jumlah
+    );
+
+    @POST("checkout")
+    @FormUrlEncoded
+    Call<ResponseSum> checkout(
+            @Field("uid") String uid
+    );
+
+    @GET("getcheckout")
+    Call<ResponseTransaksi> getcheckout(@Query("uid") String uid);
+
+    @GET("sumcheckout")
+    Call<ResponseSum> getcheckoutsum(
+            @Query("uid") String uid
+    );
+    //======= END API TRANSAKSI
 }
