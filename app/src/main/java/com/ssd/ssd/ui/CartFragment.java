@@ -4,8 +4,17 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +30,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.GrayColor;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.ssd.ssd.DetailFoodActivity;
 import com.ssd.ssd.MainActivity;
 import com.ssd.ssd.R;
@@ -36,6 +57,10 @@ import com.ssd.ssd.network.ApiInterface;
 import com.ssd.ssd.network.ServiceGenerator;
 import com.ssd.ssd.session.Preferences;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +83,8 @@ public class CartFragment extends Fragment {
     FirebaseAuth auth;
     ProgressDialog progressDialog;
     private Integer harga_total = 0;
+    Bitmap bitmap, scaleBitmap;
+    int pageWidth = 1200;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +114,7 @@ public class CartFragment extends Fragment {
                     } else {
                         Toast.makeText(requireContext().getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     return;
                 }
 
@@ -121,11 +148,14 @@ public class CartFragment extends Fragment {
                                 progressDialog.dismiss();
                                 notifikasi("checkout berhasil", "SSD Restaurant");
                                 Snackbar.make(v, "Checkout berhasil", Snackbar.LENGTH_LONG).show();
+                                createpdf();
                                 onStart();
                             } else {
                                 progressDialog.dismiss();
-                                Snackbar.make(v, "checkout Gagal", Snackbar.LENGTH_LONG).show();
-                            }
+                                notifikasi("checkout berhasil", "SSD Restaurant");
+                                Snackbar.make(v, "Checkout berhasil", Snackbar.LENGTH_LONG).show();
+                                createpdf();
+                                onStart();                            }
                         }
                     }
 
@@ -153,30 +183,30 @@ public class CartFragment extends Fragment {
         super.onStart();
         //GET API
 
-            ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
-            Call<ResponseTransaksi> call = apiInterface.gettransaksi(userId);
-            call.enqueue(new Callback<ResponseTransaksi>() {
-                @Override
-                public void onResponse(Call<ResponseTransaksi> call, Response<ResponseTransaksi> response) {
-                  try {
-                      List<BarangModel> foodModels = response.body().getData();
-                      generateDataList(foodModels);
-                      if (response.isSuccessful()) {
-                      } else {
-                          Toast.makeText(requireContext().getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
-                      }
-                  }catch (Exception e){
-                      return;
-                  }
-
+        ApiInterface apiInterface = ServiceGenerator.createService(ApiInterface.class);
+        Call<ResponseTransaksi> call = apiInterface.gettransaksi(userId);
+        call.enqueue(new Callback<ResponseTransaksi>() {
+            @Override
+            public void onResponse(Call<ResponseTransaksi> call, Response<ResponseTransaksi> response) {
+                try {
+                    List<BarangModel> foodModels = response.body().getData();
+                    generateDataList(foodModels);
+                    if (response.isSuccessful()) {
+                    } else {
+                        Toast.makeText(requireContext().getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    return;
                 }
 
-                @Override
-                public void onFailure(Call<ResponseTransaksi> call, Throwable t) {
-                    Log.d("sandy", "onResponse: " + t.getMessage());
-                }
-            });
-            //END GET API
+            }
+
+            @Override
+            public void onFailure(Call<ResponseTransaksi> call, Throwable t) {
+                Log.d("sandy", "onResponse: " + t.getMessage());
+            }
+        });
+        //END GET API
 
 
         ApiInterface getsum = ServiceGenerator.createService(ApiInterface.class);
@@ -186,7 +216,7 @@ public class CartFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         binding.txthargacart.setText("Jumlah : Rp. " + response.body().getData());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         return;
                     }
                 }
@@ -300,7 +330,7 @@ public class CartFragment extends Fragment {
 
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return;
         }
 
@@ -338,5 +368,95 @@ public class CartFragment extends Fragment {
             mNotifyMgr.createNotificationChannel(notificationChannel);
         }
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    private void createpdf() {
+
+
+        Document mdoc = new Document();
+        ContextWrapper cw = new ContextWrapper(requireContext().getApplicationContext());
+        File FileDirectory = cw.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File mFilePath = new File(FileDirectory, "pesananssd.pdf");
+
+
+        try {
+            PdfWriter.getInstance(mdoc, new FileOutputStream(mFilePath));
+            mdoc.open();
+            String data = "Tabel";
+            mdoc.addAuthor("SSD Restaurant");
+            mdoc.add(new Paragraph(data));
+            mdoc.setPageSize(PageSize.A4);
+            mdoc.addCreator("SSD");
+            mdoc.addCreationDate();
+
+            float[] columnWidths = new float[]{1f, 2f, 2f, 2f};
+            PdfPTable table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(100f);
+            table.getDefaultCell().isUseAscender();
+            table.getDefaultCell().isUseAscender();
+            Font f = new Font(Font.FontFamily.HELVETICA, 13f, Font.NORMAL, GrayColor.GRAYWHITE);
+            PdfPCell cell = new PdfPCell(new Phrase("Tabel pesanan", f));
+
+            cell.setBackgroundColor(GrayColor.GRAYBLACK);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setColspan(4);
+            table.addCell(cell);
+            table.getDefaultCell().setBackgroundColor(new GrayColor(0.75f));
+            table.addCell("No");
+            table.addCell("Nama");
+            table.addCell("Harga");
+            table.addCell("Jumlah");
+            table.setHeaderRows(2);
+            table.getDefaultCell().setBackgroundColor(GrayColor.GRAYWHITE);
+            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            ApiInterface checkoutpdf = ServiceGenerator.createService(ApiInterface.class);
+            checkoutpdf.getcheckout(userId).enqueue(new Callback<ResponseTransaksi>() {
+                @Override
+                public void onResponse(Call<ResponseTransaksi> call, Response<ResponseTransaksi> response) {
+                    if (response.isSuccessful()) {
+                        List<BarangModel> barangModels = response.body().getData();
+                        int i = 0;
+                        for (BarangModel barangModel : barangModels) {
+                            int nomor = i + 1;
+                            table.addCell(Integer.toString(nomor));
+                            table.addCell(barangModel.getNama());
+                            table.addCell(String.valueOf(barangModel.getHarga()));
+                            table.addCell(String.valueOf(barangModel.getJumlah()));
+                        }
+                        try {
+                            mdoc.add(table);
+                            mdoc.close();
+                            if (mFilePath.exists()) {
+                                Uri uri = FileProvider.getUriForFile(requireContext().getApplicationContext(),
+                                        "com.ssd.ssd.fileprovider", mFilePath);
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(uri, "application/pdf");
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(intent);
+                            } else
+                                Toast.makeText(requireContext().getApplicationContext(), "File path is incorrect", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext().getApplicationContext(), "disimpan di " + mFilePath, Toast.LENGTH_SHORT).show();
+
+                        } catch (DocumentException e) {
+                            Log.d("sandy", "gagal pdf: " + e.getMessage());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseTransaksi> call, Throwable t) {
+                    Toast.makeText(requireContext().getApplicationContext(), "gagal", Toast.LENGTH_SHORT).show();
+                    Log.d("sandy", "onFailure: " + t.getMessage());
+                }
+            });
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

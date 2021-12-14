@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import com.ssd.ssd.R;
 import com.ssd.ssd.model.FoodModels;
+import com.ssd.ssd.utils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.txtNama.setText(dataList.get(position).getNama());
         holder.txtHarga.setText("Rp. " + dataList.get(position).getHarga().toString());
         Log.d("sandy", "onBindViewHolder: "+ dataList.get(position).getFoto());
-        Picasso.get().load("http://192.168.1.7/"+dataList.get(position).getFoto()).centerCrop().fit().into(holder.imgMakanan);
+        Picasso.get().load(new Constant().url +dataList.get(position).getFoto()).centerCrop().fit().into(holder.imgMakanan);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

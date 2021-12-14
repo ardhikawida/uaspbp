@@ -51,42 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 String edtmail = binding.edtemail.getText().toString();
                 String edtpassword = binding.edtpassword.getText().toString();
 
-                if (!edtmail.isEmpty() && !edtpassword.isEmpty()){
-                    if (edtmail.equals("admin") && edtpassword.equals("admin")){
-                        Preferences.setIsLogin(getBaseContext(),"admin");
-                        Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }else {
-                        firebaseAuth.signInWithEmailAndPassword(edtmail,edtpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressDialog.dismiss();
-                                if (task.isSuccessful()){
-                                    if (firebaseAuth.getCurrentUser().isEmailVerified()){
-                                        Preferences.setIsLogin(getBaseContext(),"sukses");
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else {
-                                        Preferences.setIsLogin(getBaseContext(),"verifikasi");
-                                        Intent intent = new Intent(LoginActivity.this, VerifikasiActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }else {
-                                    Snackbar.make(v, "cek email dan password" , Snackbar.LENGTH_LONG).show();
-                                }
-
-                            }
-                        });
-
-                    }
-
-                }else {
-                    progressDialog.dismiss();
-                    Snackbar.make(v, "isi semua kolom" , Snackbar.LENGTH_LONG).show();
-                }
+                signin(edtmail,edtpassword,v);
             }
         });
 
@@ -99,6 +64,45 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void signin(String edtmail,String edtpassword,View v){
+
+        if (!edtmail.isEmpty() && !edtpassword.isEmpty()){
+            if (edtmail.equals("admin") && edtpassword.equals("admin")){
+                Preferences.setIsLogin(getBaseContext(),"admin");
+                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                startActivity(intent);
+                finish();
+            }else {
+                firebaseAuth.signInWithEmailAndPassword(edtmail,edtpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()){
+                            if (firebaseAuth.getCurrentUser().isEmailVerified()){
+                                Preferences.setIsLogin(getBaseContext(),"sukses");
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                Preferences.setIsLogin(getBaseContext(),"verifikasi");
+                                Intent intent = new Intent(LoginActivity.this, VerifikasiActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }else {
+                            Snackbar.make(v, "cek email dan password" , Snackbar.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+            }
+
+        }else {
+            progressDialog.dismiss();
+            Snackbar.make(v, "isi semua kolom" , Snackbar.LENGTH_LONG).show();
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
